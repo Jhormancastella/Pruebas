@@ -1,1024 +1,299 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generador de Separadores</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+  <meta charset="UTF-8" />
+  <title>Generador de Separadores - Una o Doble Cara</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      margin: 0;
+      font-family: Arial, sans-serif;
       padding: 20px;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-      text-align: center;
-    }
-
-    .contenedor {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 40px;
-      width: 100%;
+      background-color: #f9f9f9;
       max-width: 1200px;
-      justify-items: center;
+      margin: 0 auto;
     }
-
-    .seccion {
-      background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      text-align: center;
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .seccion h3 {
-      margin-top: 0;
+    h2 {
       color: #333;
-      border-bottom: 2px solid #ff6600;
-      padding-bottom: 10px;
-    }
-
-    .plantilla {
-      width: 150px;
-      height: 300px;
-      border-radius: 15px;
-      overflow: hidden;
-      background: #f8f9fa;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      margin: 20px auto;
-      position: relative;
-      border: 2px dashed #ddd;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .plantilla.has-image {
-      border: 2px solid #ff6600;
-    }
-
-    .plantilla img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 13px;
-    }
-
-    .plantilla-doble {
-      width: 300px;
-      height: 300px;
-      border-radius: 15px;
-      overflow: hidden;
-      background: #f8f9fa;
-      display: flex;
-      justify-content: space-between;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      margin: 20px auto;
-      position: relative;
-      border: 2px dashed #ddd;
-    }
-
-    .plantilla-doble.has-images {
-      border: 2px solid #ff6600;
-    }
-
-    .cara {
-      width: 50%;
-      height: 100%;
-      overflow: hidden;
-      position: relative;
-      border: 1px dashed #ddd;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .cara.has-image {
-      border: 1px solid #ff6600;
-    }
-
-    .cara img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .placeholder {
-      color: #999;
-      font-size: 14px;
       text-align: center;
-      padding: 20px;
     }
-
-    .file-input-wrapper {
-      position: relative;
-      display: inline-block;
-      margin: 10px 5px;
+    .mode-selector {
+      text-align: center;
+      margin: 20px 0;
     }
-
-    .file-input-wrapper input[type="file"] {
-      position: absolute;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-
-    .file-input-label {
-      display: inline-block;
+    .mode-btn {
+      margin: 0 10px;
       padding: 10px 20px;
-      background: #28a745;
-      color: white;
-      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-
-    .file-input-label:hover {
-      background: #218838;
-      transform: translateY(-2px);
-    }
-
-    button {
-      padding: 12px 20px;
+      background-color: #ddd;
       border: none;
-      border-radius: 8px;
-      background: #ff6600;
+      border-radius: 5px;
+    }
+    .mode-btn.active {
+      background-color: #007bff;
       color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 5px;
+    }
+    .upload-section {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .image-box {
+      width: 400px;
+      height: 400px;
+      border: 2px dashed #ccc;
+      background-color: #fff;
       position: relative;
       overflow: hidden;
     }
-
-    button:hover:not(:disabled) {
-      background: #cc5200;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-confirm {
-      background: #007bff;
-    }
-
-    .btn-confirm:hover {
-      background: #0056b3;
-    }
-
-    .btn-download {
-      background: #28a745;
-      font-size: 16px;
-      padding: 15px 25px;
-    }
-
-    .btn-download:hover {
-      background: #218838;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
+    .image-box img {
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
+      object-fit: contain;
     }
-
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      position: relative;
-      max-width: 400px;
-      width: 90%;
-      animation: slideIn 0.3s ease;
-    }
-
-    .modal-close {
+    .label {
       position: absolute;
-      top: 15px;
-      right: 20px;
-      background: none;
-      border: none;
-      font-size: 24px;
+      top: 5px;
+      left: 5px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 3px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
       cursor: pointer;
-      color: #999;
-      padding: 0;
-      width: 30px;
-      height: 30px;
-    }
-
-    .modal-close:hover {
-      color: #333;
-      background: none;
-      transform: none;
-    }
-
-    .loading {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.9);
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-
-    .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #ff6600;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-
-    .error-message {
-      background: #f8d7da;
-      color: #721c24;
-      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
       border-radius: 5px;
-      margin: 10px 0;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #previewContainer {
+      margin-top: 30px;
+      text-align: center;
       display: none;
     }
-
-    .success-message {
-      background: #d4edda;
-      color: #155724;
-      padding: 10px;
-      border-radius: 5px;
-      margin: 10px 0;
+    #previewContainer img {
+      width: 5cm;
+      height: 15cm;
+      object-fit: cover;
+      border: 1px solid #ddd;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      image-rendering: crisp-edges;
+    }
+    #previewContainer.double img {
+      width: 10cm;
+      height: 15cm;
+    }
+    .controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+    #imageUpload2 {
       display: none;
     }
-
-    /* Estilos específicos para asegurar que las imágenes se muestren correctamente */
-    .plantilla img, .cara img {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
-      border-radius: 13px;
+    .double-mode #imageUpload2 {
       display: block;
     }
-
-    /* Reset completo para el contenedor del cropper */
-    .cropper-container {
-      position: relative;
-      font-size: 0;
-      line-height: 0;
-      user-select: none;
-      touch-action: none;
-      background: transparent !important;
+    .double-mode .image-box:nth-child(2) {
+      display: block;
     }
-
-    .cropper-wrap-box {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      overflow: hidden;
-    }
-
-    .cropper-canvas {
-      background: transparent !important;
-    }
-
-    /* Asegurar que el placeholder se oculte correctamente */
-    .plantilla.has-image .placeholder,
-    .cara.has-image .placeholder {
-      display: none !important;
-    }
-
-    /* Estados de carga mejorados */
-    .plantilla:not(.has-image),
-    .cara:not(.has-image) {
-      background: #f8f9fa;
-    }
-
-    .plantilla.has-image,
-    .cara.has-image,
-    .plantilla-doble.has-images {
-      background: transparent;
-      border-color: #ff6600;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideIn {
-      from { transform: translateY(-50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    @media (max-width: 768px) {
-      .contenedor {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
-      .plantilla {
-        width: 120px;
-        height: 240px;
-      }
-      
-      .plantilla-doble {
-        width: 240px;
-        height: 240px;
-      }
-      
-      h1 {
-        font-size: 24px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .seccion {
-        padding: 15px;
-      }
-      
-      .plantilla {
-        width: 100px;
-        height: 200px;
-      }
-      
-      .plantilla-doble {
-        width: 200px;
-        height: 200px;
-      }
+    .single-mode .image-box:nth-child(2) {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <h1>🔖 Generador de Separadores Personalizados</h1>
+  <h2>🔹 Generador de Separadores de Libros</h2>
 
-  <!-- Loading Spinner -->
-  <div id="loading" class="loading">
-    <div class="spinner"></div>
+  <div class="mode-selector">
+    <button class="mode-btn active" data-mode="single">✅ Separador de una cara</button>
+    <button class="mode-btn" data-mode="double">🔄 Separador de doble cara</button>
   </div>
 
-  <div class="contenedor">
-    <!-- Una cara -->
-    <div class="seccion">
-      <h3>📄 Separador Una Cara</h3>
-      <div class="plantilla" id="plantilla-una">
-        <div class="placeholder">Sube una imagen</div>
-        <img id="preview-una" src="" alt="Vista previa separador una cara" style="display: none;">
+  <div class="upload-section single-mode">
+    <div>
+      <p><strong>Imagen única:</strong></p>
+      <input type="file" id="imageUpload1" accept="image/*" />
+      <div class="image-box" id="box1">
+        <img id="image1" src="" alt="Imagen 1" />
+        <div class="label">Cara 1</div>
       </div>
-      
-      <div class="error-message" id="error-una"></div>
-      <div class="success-message" id="success-una"></div>
-      
-      <div class="file-input-wrapper">
-        <input type="file" id="upload-una" accept="image/*" aria-label="Subir imagen para separador de una cara">
-        <label for="upload-una" class="file-input-label">📁 Seleccionar Imagen</label>
-      </div>
-      
-      <br>
-      <button id="confirm-una" class="btn-confirm" style="display:none;">✅ Confirmar Recorte</button>
-      <br>
-      <button id="download-una" class="btn-download" disabled>⬇️ Descargar Separador</button>
     </div>
 
-    <!-- Doble cara -->
-    <div class="seccion">
-      <h3>📄📄 Separador Doble Cara</h3>
-      <div class="plantilla-doble" id="plantilla-doble">
-        <div class="cara" id="cara1">
-          <div class="placeholder">Cara 1</div>
-          <img id="preview-doble1" src="" alt="Vista previa cara 1" style="display: none;">
-        </div>
-        <div class="cara" id="cara2">
-          <div class="placeholder">Cara 2</div>
-          <img id="preview-doble2" src="" alt="Vista previa cara 2" style="display: none;">
-        </div>
+    <div>
+      <p><strong>Imagen 2 (oculta en modo simple):</strong></p>
+      <input type="file" id="imageUpload2" accept="image/*" />
+      <div class="image-box" id="box2">
+        <img id="image2" src="" alt="Imagen 2" />
+        <div class="label">Cara 2</div>
       </div>
-      
-      <div class="error-message" id="error-doble"></div>
-      <div class="success-message" id="success-doble"></div>
-      
-      <div class="file-input-wrapper">
-        <input type="file" id="upload-doble1" accept="image/*" aria-label="Subir imagen para cara 1">
-        <label for="upload-doble1" class="file-input-label">📁 Imagen Cara 1</label>
-      </div>
-      <button id="confirm-doble1" class="btn-confirm" style="display:none;">✅ Confirmar Cara 1</button>
-      
-      <br>
-      
-      <div class="file-input-wrapper">
-        <input type="file" id="upload-doble2" accept="image/*" aria-label="Subir imagen para cara 2">
-        <label for="upload-doble2" class="file-input-label">📁 Imagen Cara 2</label>
-      </div>
-      <button id="confirm-doble2" class="btn-confirm" style="display:none;">✅ Confirmar Cara 2</button>
-      
-      <br>
-      <button id="download-doble" class="btn-download" disabled>⬇️ Descargar Separador</button>
     </div>
   </div>
 
-  <!-- Modal para elegir formato -->
-  <div id="modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
-    <div class="modal-content">
-      <button class="modal-close" id="modal-close" aria-label="Cerrar modal">&times;</button>
-      <h3 id="modal-title">📥 Elige formato de descarga</h3>
-      <p>Selecciona el formato que prefieras:</p>
-      <button id="modal-jpg">🖼️ JPG (Imagen)</button>
-      <button id="modal-pdf">📄 PDF (Para Impresión)</button>
-    </div>
+  <div class="controls">
+    <button id="cropButton">Recortar imagen(es)</button>
+    <button id="downloadButton" style="display:none;">Descargar separador</button>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  
+  <div id="previewContainer">
+    <h3>Tu separador final:</h3>
+    <img id="finalPreview" src="" alt="Separador" />
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
   <script>
-    // Configuración global
-    const CONFIG = {
-      MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
-      ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-      SEPARATOR_WIDTH_SINGLE: 150,
-      SEPARATOR_HEIGHT: 450,
-      SEPARATOR_WIDTH_DOUBLE: 300,
-      ASPECT_RATIO: 150 / 450
-    };
+    let cropper1, cropper2;
+    let croppedCanvas1, croppedCanvas2;
+    let currentMode = 'single';
 
-    // Estado global
-    let state = {
-      croppedImageUna: null,
-      croppedImageDoble1: null,
-      croppedImageDoble2: null,
-      currentCropper: null,
-      librariesLoaded: false
-    };
+    // Cambiar modo
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentMode = this.dataset.mode;
 
-    // Verificar si las librerías están cargadas
-    function checkLibraries() {
-      const requiredLibs = ['Cropper', 'html2canvas'];
-      const missingLibs = requiredLibs.filter(lib => typeof window[lib] === 'undefined');
-      
-      if (missingLibs.length > 0) {
-        showError('global', `Error: No se pudieron cargar las librerías necesarias: ${missingLibs.join(', ')}`);
-        return false;
-      }
-      
-      state.librariesLoaded = true;
-      return true;
-    }
+        const container = document.querySelector('.upload-section');
+        container.className = `upload-section ${currentMode}-mode`;
 
-    // Funciones de utilidad
-    function showLoading() {
-      document.getElementById('loading').style.display = 'flex';
-    }
+        // Resetear croppers si cambiamos de modo
+        if (cropper1) cropper1.destroy();
+        if (cropper2) cropper2.destroy();
+        cropper1 = cropper2 = null;
+        document.getElementById('image1').src = '';
+        document.getElementById('image2').src = '';
+        document.getElementById('previewContainer').style.display = 'none';
+        document.getElementById('downloadButton').style.display = 'none';
+      });
+    });
 
-    function hideLoading() {
-      document.getElementById('loading').style.display = 'none';
-    }
+    document.getElementById('imageUpload1').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-    function showError(section, message) {
-      const errorElement = document.getElementById(`error-${section}`);
-      if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.style.display = 'block';
-        setTimeout(() => {
-          errorElement.style.display = 'none';
-        }, 5000);
-      } else {
-        alert(message);
-      }
-    }
-
-    function showSuccess(section, message) {
-      const successElement = document.getElementById(`success-${section}`);
-      if (successElement) {
-        successElement.textContent = message;
-        successElement.style.display = 'block';
-        setTimeout(() => {
-          successElement.style.display = 'none';
-        }, 3000);
-      }
-    }
-
-    function validateFile(file) {
-      if (!file) {
-        return { valid: false, error: 'No se seleccionó ningún archivo.' };
-      }
-
-      if (file.size > CONFIG.MAX_FILE_SIZE) {
-        return { valid: false, error: `El archivo es demasiado grande. Máximo ${CONFIG.MAX_FILE_SIZE / (1024 * 1024)}MB.` };
-      }
-
-      if (!CONFIG.ALLOWED_TYPES.includes(file.type)) {
-        return { valid: false, error: 'Formato no válido. Solo se permiten imágenes JPG, PNG y WebP.' };
-      }
-
-      return { valid: true };
-    }
-
-    function destroyCropper() {
-      if (state.currentCropper) {
-        // Limpiar completamente el contenedor del cropper
-        const container = state.currentCropper.getContainer();
-        if (container && container.parentNode) {
-          container.parentNode.removeChild(container);
-        }
-        
-        // Destruir la instancia
-        state.currentCropper.destroy();
-        state.currentCropper = null;
-      }
-    }
-
-    function resetImageSection(previewElement, confirmButton, downloadButton, section) {
-      // Ocultar imagen
-      previewElement.style.display = 'none';
-      previewElement.src = '';
-      
-      // Mostrar placeholder
-      const placeholder = previewElement.parentElement.querySelector('.placeholder');
-      if (placeholder) {
-        placeholder.style.display = 'block';
-      }
-      
-      // Resetear botones
-      confirmButton.style.display = 'none';
-      if (downloadButton) downloadButton.disabled = true;
-      
-      // Resetear clases
-      previewElement.parentElement.classList.remove('has-image');
-      
-      // Resetear estado
-      if (section === 'una') {
-        state.croppedImageUna = null;
-      } else if (section === 'doble1') {
-        state.croppedImageDoble1 = null;
-      } else if (section === 'doble2') {
-        state.croppedImageDoble2 = null;
-      }
-      
-      // Limpiar cropper
-      destroyCropper();
-    }
-
-    function initializeCropper(imgElement, confirmButton, onReady) {
-      if (!state.librariesLoaded) {
-        showError('global', 'Las librerías no están cargadas correctamente.');
-        return null;
-      }
-
-      destroyCropper();
-
-      try {
-        // Asegurar que la imagen esté visible y con estilos reseteados
-        imgElement.style.display = 'block';
-        imgElement.style.width = '100%';
-        imgElement.style.height = '100%';
-        imgElement.style.objectFit = 'cover';
-        imgElement.style.transform = 'none';
-        
-        state.currentCropper = new Cropper(imgElement, {
-          aspectRatio: CONFIG.ASPECT_RATIO,
-          viewMode: 1,
-          autoCropArea: 1,
-          zoomable: true,
-          movable: true,
-          rotatable: true,
-          scalable: true,
-          cropBoxResizable: true,
-          ready: () => {
-            confirmButton.style.display = 'inline-block';
-            if (onReady) onReady();
-          },
-          error: (error) => {
-            console.error('Error en Cropper:', error);
-            showError('global', 'Error al inicializar el editor de imágenes.');
-          }
-        });
-        
-        return state.currentCropper;
-      } catch (error) {
-        console.error('Error creando Cropper:', error);
-        showError('global', 'Error al crear el editor de imágenes.');
-        return null;
-      }
-    }
-
-    function handleImageUpload(input, preview, confirm, section, onSuccess) {
-      const file = input.files[0];
-      const validation = validateFile(file);
-
-      if (!validation.valid) {
-        showError(section, validation.error);
-        input.value = '';
-        return;
-      }
-
-      showLoading();
-      
       const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          // Resetear completamente la imagen antes de cargar la nueva
-          preview.style.cssText = '';
-          preview.style.display = 'block';
-          preview.style.width = '100%';
-          preview.style.height = '100%';
-          preview.style.objectFit = 'cover';
-          
-          preview.src = event.target.result;
-          preview.parentElement.querySelector('.placeholder').style.display = 'none';
-          
-          preview.onload = () => {
-            hideLoading();
-            const cropper = initializeCropper(preview, confirm, () => {
-              preview.parentElement.classList.add('has-image');
-              if (onSuccess) onSuccess();
-            });
-            
-            if (!cropper) {
-              showError(section, 'Error al cargar el editor de imagen.');
-              return;
-            }
-          };
-          
-          preview.onerror = () => {
-            hideLoading();
-            showError(section, 'Error al cargar la imagen.');
-            // Restaurar placeholder en caso de error
-            preview.style.display = 'none';
-            preview.parentElement.querySelector('.placeholder').style.display = 'block';
-          };
-        } catch (error) {
-          hideLoading();
-          console.error('Error procesando imagen:', error);
-          showError(section, 'Error al procesar la imagen.');
-          preview.style.display = 'none';
-          preview.parentElement.querySelector('.placeholder').style.display = 'block';
-        }
-      };
+      reader.onload = function(event) {
+        const img = document.getElementById('image1');
+        img.src = event.target.result;
 
-      reader.onerror = () => {
-        hideLoading();
-        showError(section, 'Error al leer el archivo.');
-        preview.style.display = 'none';
-        preview.parentElement.querySelector('.placeholder').style.display = 'block';
-      };
+        if (cropper1) cropper1.destroy();
 
+        cropper1 = new Cropper(img, {
+          aspectRatio: 1 / 3,
+          viewMode: 1,
+          dragMode: 'move',
+          cropBoxResizable: true,
+          cropBoxMovable: true,
+          guides: true,
+          center: true,
+          highlight: false,
+          autoCropArea: 0.8,
+          responsive: true,
+          zoomOnWheel: true,
+          zoomOnTouch: true,
+        });
+      };
       reader.readAsDataURL(file);
-    }
-
-    function handleCropConfirm(cropperInstance, stateKey, preview, confirm, section, callback) {
-      if (!cropperInstance) {
-        showError(section, 'No hay imagen para recortar.');
-        return;
-      }
-
-      showLoading();
-
-      try {
-        const canvas = cropperInstance.getCroppedCanvas({
-          width: CONFIG.SEPARATOR_WIDTH_SINGLE,
-          height: CONFIG.SEPARATOR_HEIGHT,
-          imageSmoothingEnabled: true,
-          imageSmoothingQuality: 'high'
-        });
-
-        state[stateKey] = canvas.toDataURL('image/png', 0.95);
-        
-        // Limpiar completamente antes de mostrar la imagen recortada
-        destroyCropper();
-        
-        // Resetear completamente la vista previa
-        preview.style.cssText = '';
-        preview.style.display = 'block';
-        preview.style.width = '100%';
-        preview.style.height = '100%';
-        preview.style.objectFit = 'cover';
-        preview.style.borderRadius = '13px';
-        
-        preview.src = state[stateKey];
-        
-        confirm.style.display = 'none';
-        
-        // Asegurar que el placeholder esté oculto
-        const placeholder = preview.parentElement.querySelector('.placeholder');
-        if (placeholder) {
-          placeholder.style.display = 'none';
-        }
-        
-        // Forzar reflow para asegurar que los estilos se apliquen
-        preview.parentElement.classList.remove('has-image');
-        void preview.parentElement.offsetWidth; // Trigger reflow
-        preview.parentElement.classList.add('has-image');
-        
-        showSuccess(section, 'Imagen recortada correctamente.');
-        
-        if (callback) callback();
-      } catch (error) {
-        console.error('Error al recortar:', error);
-        showError(section, 'Error al recortar la imagen.');
-      } finally {
-        hideLoading();
-      }
-    }
-
-    function generateCanvas(isDouble, images) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      
-      canvas.width = isDouble ? CONFIG.SEPARATOR_WIDTH_DOUBLE : CONFIG.SEPARATOR_WIDTH_SINGLE;
-      canvas.height = CONFIG.SEPARATOR_HEIGHT;
-      
-      // Fondo blanco
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      return new Promise((resolve, reject) => {
-        if (isDouble) {
-          let loadedImages = 0;
-          const imgs = [new Image(), new Image()];
-          
-          imgs.forEach((img, index) => {
-            img.onload = () => {
-              ctx.drawImage(img, index * CONFIG.SEPARATOR_WIDTH_SINGLE, 0, CONFIG.SEPARATOR_WIDTH_SINGLE, CONFIG.SEPARATOR_HEIGHT);
-              loadedImages++;
-              if (loadedImages === 2) resolve(canvas);
-            };
-            img.onerror = () => reject(new Error(`Error cargando imagen ${index + 1}`));
-            img.src = images[index];
-          });
-        } else {
-          const img = new Image();
-          img.onload = () => {
-            ctx.drawImage(img, 0, 0, CONFIG.SEPARATOR_WIDTH_SINGLE, CONFIG.SEPARATOR_HEIGHT);
-            resolve(canvas);
-          };
-          img.onerror = () => reject(new Error('Error cargando imagen'));
-          img.src = images[0];
-        }
-      });
-    }
-
-    function downloadAsJPG(filename, isDouble, images) {
-      showLoading();
-      
-      generateCanvas(isDouble, images)
-        .then(canvas => {
-          const link = document.createElement('a');
-          link.download = `${filename}.jpg`;
-          link.href = canvas.toDataURL('image/jpeg', 0.95);
-          link.click();
-          
-          showSuccess('global', 'Descarga completada exitosamente.');
-        })
-        .catch(error => {
-          console.error('Error generando JPG:', error);
-          showError('global', 'Error al generar la imagen JPG.');
-        })
-        .finally(() => {
-          hideLoading();
-        });
-    }
-
-    function downloadAsPDF(plantillaId, filename, isDouble) {
-      if (typeof window.jspdf === 'undefined') {
-        showError('global', 'Error: Librería PDF no disponible.');
-        return;
-      }
-
-      showLoading();
-
-      const element = document.getElementById(plantillaId);
-      
-      html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff'
-      }).then(canvas => {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-
-        const imgData = canvas.toDataURL('image/png', 0.95);
-        const width = isDouble ? 100 : 50;
-        const height = 150;
-        const x = (210 - width) / 2;
-        const y = 50;
-
-        // Agregar imagen
-        doc.addImage(imgData, 'PNG', x, y, width, height);
-
-        // Agregar guías de corte
-        doc.setDrawColor(200, 200, 200);
-        doc.setLineWidth(0.1);
-        doc.rect(x, y, width, height);
-        
-        // Marcas de corte
-        doc.setDrawColor(0, 0, 0);
-        doc.setLineWidth(0.2);
-        const markLength = 5;
-        
-        // Esquinas
-        doc.line(x - markLength, y, x, y);
-        doc.line(x + width, y, x + width + markLength, y);
-        doc.line(x - markLength, y + height, x, y + height);
-        doc.line(x + width, y + height, x + width + markLength, y + height);
-
-        // Información
-        doc.setFontSize(10);
-        doc.text(`Medidas: ${isDouble ? '10cm x 15cm' : '5cm x 15cm'}`, 10, 20);
-        doc.text('Recomendación: Papel fotográfico o cartulina de 180-250gsm', 10, 30);
-        doc.text('Imprime sin escalar al 100%', 10, 40);
-        doc.text('Las líneas grises son guías de corte', 10, 250);
-
-        doc.save(`${filename}.pdf`);
-        showSuccess('global', 'PDF generado exitosamente.');
-      }).catch(error => {
-        console.error('Error generando PDF:', error);
-        showError('global', 'Error al generar el PDF.');
-      }).finally(() => {
-        hideLoading();
-      });
-    }
-
-    function openModal(plantillaId, filename, isDouble, images) {
-      const modal = document.getElementById('modal');
-      const modalJpg = document.getElementById('modal-jpg');
-      const modalPdf = document.getElementById('modal-pdf');
-
-      modal.style.display = 'flex';
-      modal.setAttribute('aria-hidden', 'false');
-
-      modalJpg.onclick = () => {
-        closeModal();
-        downloadAsJPG(filename, isDouble, images);
-      };
-
-      modalPdf.onclick = () => {
-        closeModal();
-        downloadAsPDF(plantillaId, filename, isDouble);
-      };
-    }
-
-    function closeModal() {
-      const modal = document.getElementById('modal');
-      modal.style.display = 'none';
-      modal.setAttribute('aria-hidden', 'true');
-    }
-
-    // Event Listeners
-    document.addEventListener('DOMContentLoaded', () => {
-      // Verificar librerías al cargar
-      setTimeout(() => {
-        checkLibraries();
-      }, 1000);
-
-      // Modal close handlers
-      document.getElementById('modal-close').addEventListener('click', closeModal);
-      
-      window.addEventListener('click', (event) => {
-        const modal = document.getElementById('modal');
-        if (event.target === modal) {
-          closeModal();
-        }
-      });
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-          closeModal();
-        }
-      });
-
-      // --- SEPARADOR UNA CARA ---
-      const uploadUna = document.getElementById('upload-una');
-      const previewUna = document.getElementById('preview-una');
-      const confirmUna = document.getElementById('confirm-una');
-      const downloadUna = document.getElementById('download-una');
-
-      uploadUna.addEventListener('change', () => {
-        // Resetear antes de cargar nueva imagen
-        resetImageSection(previewUna, confirmUna, downloadUna, 'una');
-        handleImageUpload(uploadUna, previewUna, confirmUna, 'una', () => {
-          downloadUna.disabled = true;
-        });
-      });
-
-      confirmUna.addEventListener('click', () => {
-        handleCropConfirm(state.currentCropper, 'croppedImageUna', previewUna, confirmUna, 'una', () => {
-          downloadUna.disabled = false;
-        });
-      });
-
-      downloadUna.addEventListener('click', () => {
-        if (state.croppedImageUna) {
-          openModal('plantilla-una', 'separador-una-cara', false, [state.croppedImageUna]);
-        } else {
-          showError('una', 'Por favor, confirma el recorte antes de descargar.');
-        }
-      });
-
-      // --- SEPARADOR DOBLE CARA ---
-      const uploadDoble1 = document.getElementById('upload-doble1');
-      const previewDoble1 = document.getElementById('preview-doble1');
-      const confirmDoble1 = document.getElementById('confirm-doble1');
-      const uploadDoble2 = document.getElementById('upload-doble2');
-      const previewDoble2 = document.getElementById('preview-doble2');
-      const confirmDoble2 = document.getElementById('confirm-doble2');
-      const downloadDoble = document.getElementById('download-doble');
-
-      function updateDownloadDobleState() {
-        downloadDoble.disabled = !(state.croppedImageDoble1 && state.croppedImageDoble2);
-        if (!downloadDoble.disabled) {
-          document.getElementById('plantilla-doble').classList.add('has-images');
-        }
-      }
-
-      uploadDoble1.addEventListener('change', () => {
-        resetImageSection(previewDoble1, confirmDoble1, downloadDoble, 'doble1');
-        handleImageUpload(uploadDoble1, previewDoble1, confirmDoble1, 'doble', () => {
-          document.getElementById('cara1').classList.add('has-image');
-          updateDownloadDobleState();
-        });
-      });
-
-      confirmDoble1.addEventListener('click', () => {
-        handleCropConfirm(state.currentCropper, 'croppedImageDoble1', previewDoble1, confirmDoble1, 'doble', updateDownloadDobleState);
-      });
-
-      uploadDoble2.addEventListener('change', () => {
-        resetImageSection(previewDoble2, confirmDoble2, downloadDoble, 'doble2');
-        handleImageUpload(uploadDoble2, previewDoble2, confirmDoble2, 'doble', () => {
-          document.getElementById('cara2').classList.add('has-image');
-          updateDownloadDobleState();
-        });
-      });
-
-      confirmDoble2.addEventListener('click', () => {
-        handleCropConfirm(state.currentCropper, 'croppedImageDoble2', previewDoble2, confirmDoble2, 'doble', updateDownloadDobleState);
-      });
-
-      downloadDoble.addEventListener('click', () => {
-        if (state.croppedImageDoble1 && state.croppedImageDoble2) {
-          openModal('plantilla-doble', 'separador-doble-cara', true, [state.croppedImageDoble1, state.croppedImageDoble2]);
-        } else {
-          showError('doble', 'Por favor, confirma el recorte de ambas caras antes de descargar.');
-        }
-      });
     });
 
-    // Manejo global de errores
-    window.addEventListener('error', (event) => {
-      console.error('Error global:', event.error);
-      hideLoading();
-      showError('global', 'Ocurrió un error inesperado. Por favor, recarga la página.');
+    document.getElementById('imageUpload2').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = document.getElementById('image2');
+        img.src = event.target.result;
+
+        if (cropper2) cropper2.destroy();
+
+        cropper2 = new Cropper(img, {
+          aspectRatio: 1 / 3,
+          viewMode: 1,
+          dragMode: 'move',
+          cropBoxResizable: true,
+          cropBoxMovable: true,
+          guides: true,
+          center: true,
+          highlight: false,
+          autoCropArea: 0.8,
+          responsive: true,
+          zoomOnWheel: true,
+          zoomOnTouch: true,
+        });
+      };
+      reader.readAsDataURL(file);
     });
 
-    window.addEventListener('unhandledrejection', (event) => {
-      console.error('Promise rechazada:', event.reason);
-      hideLoading();
-      showError('global', 'Error en el procesamiento. Por favor, inténtalo de nuevo.');
+    document.getElementById('cropButton').addEventListener('click', function() {
+      if (currentMode === 'single') {
+        if (!cropper1) {
+          alert("Por favor, sube y recorta la imagen.");
+          return;
+        }
+
+        croppedCanvas1 = cropper1.getCroppedCanvas({
+          width: 500,
+          height: 1500,
+        });
+
+        const preview = document.getElementById('finalPreview');
+        preview.src = croppedCanvas1.toDataURL();
+        document.getElementById('previewContainer').classList.remove('double');
+        document.getElementById('previewContainer').style.display = 'block';
+        document.getElementById('downloadButton').style.display = 'inline-block';
+        window.finalCanvas = croppedCanvas1;
+
+      } else if (currentMode === 'double') {
+        if (!cropper1 || !cropper2) {
+          alert("Por favor, sube y recorta ambas imágenes.");
+          return;
+        }
+
+        croppedCanvas1 = cropper1.getCroppedCanvas({
+          width: 500,
+          height: 1500,
+        });
+
+        croppedCanvas2 = cropper2.getCroppedCanvas({
+          width: 500,
+          height: 1500,
+        });
+
+        // Crear canvas combinado (1000x1500)
+        const combinedCanvas = document.createElement('canvas');
+        combinedCanvas.width = 1000;
+        combinedCanvas.height = 1500;
+        const ctx = combinedCanvas.getContext('2d');
+
+        ctx.drawImage(croppedCanvas1, 0, 0);
+        ctx.drawImage(croppedCanvas2, 500, 0);
+
+        const preview = document.getElementById('finalPreview');
+        preview.src = combinedCanvas.toDataURL();
+        document.getElementById('previewContainer').classList.add('double');
+        document.getElementById('previewContainer').style.display = 'block';
+        document.getElementById('downloadButton').style.display = 'inline-block';
+        window.finalCanvas = combinedCanvas;
+      }
+    });
+
+    document.getElementById('downloadButton').addEventListener('click', function() {
+      if (!window.finalCanvas) return;
+
+      const link = document.createElement('a');
+      link.download = currentMode === 'single' ? 'separador-una-cara.png' : 'separador-doble-cara.png';
+      link.href = window.finalCanvas.toDataURL('image/png');
+      link.click();
     });
   </script>
 </body>
