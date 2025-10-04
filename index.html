@@ -1087,23 +1087,36 @@
   </button> -->
 
   <script>
-    // Script para gestionar el cambio de idiomas
-    document.getElementById('language-toggle').addEventListener('click', toggleLanguage);
-    document.getElementById('mobile-language-toggle').addEventListener('click', toggleLanguage);
+    // Variable para rastrear el idioma actual (inicia en español)
+    let currentLang = 'es';
 
+    // Función corregida para cambio de idiomas
     function toggleLanguage(event) {
       event.preventDefault();
       const esElements = document.querySelectorAll('.lang-es');
       const enElements = document.querySelectorAll('.lang-en');
-      esElements.forEach(el => el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none");
-      enElements.forEach(el => el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none");
       const toggles = document.querySelectorAll('#language-toggle, #mobile-language-toggle');
-      toggles.forEach(toggle => {
-        toggle.textContent = (toggle.textContent === "ES/EN") ? "EN/ES" : "ES/EN";
-      });
+
+      if (currentLang === 'es') {
+        // Cambiar a inglés: ocultar ES, mostrar EN
+        esElements.forEach(el => el.style.display = 'none');
+        enElements.forEach(el => el.style.display = '');
+        toggles.forEach(toggle => toggle.textContent = 'EN/ES');
+        currentLang = 'en';
+      } else {
+        // Cambiar a español: ocultar EN, mostrar ES
+        enElements.forEach(el => el.style.display = 'none');
+        esElements.forEach(el => el.style.display = '');
+        toggles.forEach(toggle => toggle.textContent = 'ES/EN');
+        currentLang = 'es';
+      }
     }
 
-    // Funciones para los botones
+    // Asignar el evento a los botones
+    document.getElementById('language-toggle').addEventListener('click', toggleLanguage);
+    document.getElementById('mobile-language-toggle').addEventListener('click', toggleLanguage);
+
+    // Funciones para los botones de proyectos
     function downloadProject(projectId) {
       alert(`Iniciando descarga del proyecto: ${projectId}`);
     }
