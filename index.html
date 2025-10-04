@@ -3,1237 +3,1022 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portafolio de Jhorman Jesus Castellanos Morales: Desarrollador Web Junior, Fotógrafo y Técnico en Sistemas.">
-  <title>Portafolio | Jhorman Jesus Castellanos Morales</title>
-  
-  <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/dipv76dpn/image/upload/v1757879361/Rosy/fstj3avfegrq8heo9xha.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Generador de Separadores</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
   <style>
-    /* Variables para temas */
-    :root {
-      /* Tema oscuro (por defecto) */
-      --bg-primary: #121212;
-      --bg-secondary: #1e1e1e;
-      --text-primary: #e0e0e0;
-      --text-secondary: #a0a0a0;
-      --accent: #ffd700;
-      --card-bg: #2a2a2a;
-      --border: #3a3a3a;
-      --shadow: rgba(0, 0, 0, 0.3);
-
-      /* Tema claro */
-      --light-bg-primary: #ffffff;
-      --light-bg-secondary: #f5f5f5;
-      --light-text-primary: #333333;
-      --light-text-secondary: #666666;
-      --light-accent: #f9ca24;
-      --light-card-bg: #ffffff;
-      --light-border: #e0e0e0;
-      --light-shadow: rgba(0, 0, 0, 0.1);
+    * {
+      box-sizing: border-box;
     }
 
-    .portfolio-buttons {
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
-      gap: 10px;
-      margin-top: 15px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 20px;
     }
 
-    .portfolio-buttons button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
+    h1 {
+      margin-bottom: 30px;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .contenedor {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 40px;
+      width: 100%;
+      max-width: 1200px;
+      justify-items: center;
+    }
+
+    .seccion {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .seccion h3 {
+      margin-top: 0;
+      color: #333;
+      border-bottom: 2px solid #ff6600;
+      padding-bottom: 10px;
+    }
+
+    .plantilla {
+      width: 150px;
+      height: 300px;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #f8f9fa;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      margin: 20px auto;
+      position: relative;
+      border: 2px dashed #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .plantilla.has-image {
+      border: 2px solid #ff6600;
+    }
+
+    .plantilla img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 13px;
+    }
+
+    .plantilla-doble {
+      width: 300px;
+      height: 300px;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: space-between;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      margin: 20px auto;
+      position: relative;
+      border: 2px dashed #ddd;
+    }
+
+    .plantilla-doble.has-images {
+      border: 2px solid #ff6600;
+    }
+
+    .cara {
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      border: 1px dashed #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cara.has-image {
+      border: 1px solid #ff6600;
+    }
+
+    .cara img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .placeholder {
+      color: #999;
+      font-size: 14px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+      margin: 10px 5px;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
       cursor: pointer;
-      font-weight: 500;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
       transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .file-input-label:hover {
+      background: #218838;
+      transform: translateY(-2px);
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #ff6600;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover:not(:disabled) {
+      background: #cc5200;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-confirm {
+      background: #007bff;
+    }
+
+    .btn-confirm:hover {
+      background: #0056b3;
     }
 
     .btn-download {
-      background-color: #4CAF50;
-      color: white;
+      background: #28a745;
+      font-size: 16px;
+      padding: 15px 25px;
     }
 
     .btn-download:hover {
-      background-color: #3e8e41;
+      background: #218838;
     }
 
-    .btn-clone {
-      background-color: #2196F3;
-      color: white;
-    }
-
-    .btn-clone:hover {
-      background-color: #0b7dda;
-    }
-
-    .btn-visit {
-      background-color: #ff9800;
-      color: white;
-    }
-
-    .btn-visit:hover {
-      background-color: #e68a00;
-    }
-
-    /* Matrix Canvas Background */
-    #matrixCanvas {
+    .modal {
+      display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
-      opacity: 0.1;
-      pointer-events: none;
-    }
-
-    /* Ajustar el fondo para que sea transparente y permita ver el efecto matrix */
-    body {
-      background-color: rgba(18, 18, 18, 0.95);
-    }
-
-    .navbar,
-    .portfolio,
-    .skills,
-    .contact,
-    .footer {
-      backdrop-filter: blur(5px);
-    }
-
-    /* Estilos base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: "Inter", sans-serif;
-      line-height: 1.6;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-    }
-
-    /* Contenedor */
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Botón de cambio de tema */
-    .theme-toggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1000;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
+      background: rgba(0,0,0,0.7);
       justify-content: center;
-      font-size: 1.5rem;
-      transition: background-color 0.3s;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .light-theme .theme-toggle {
-      background-color: var(--light-bg-secondary);
-      color: var(--light-text-primary);
-    }
-
-    .dark-theme .theme-toggle {
-      background-color: var(--bg-secondary);
-      color: var(--text-primary);
-    }
-
-    .light-theme .fa-sun {
-      display: none;
-    }
-
-    .light-theme .fa-moon {
-      display: block;
-    }
-
-    .dark-theme .fa-sun {
-      display: block;
-    }
-
-    .dark-theme .fa-moon {
-      display: none;
-    }
-
-    /* Navbar */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 1rem 0;
-      background-color: var(--bg-primary);
-      box-shadow: 0 2px 10px var(--shadow);
-    }
-
-    .navbar-content {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
     }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      text-decoration: none;
-      color: var(--text-primary);
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      max-width: 400px;
+      width: 90%;
+      animation: slideIn 0.3s ease;
     }
 
-    .nav-menu {
-      display: flex;
-      gap: 2rem;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      font-weight: 500;
-      color: var(--text-primary);
-      transition: color 0.3s;
-    }
-
-    .nav-link:hover {
-      color: var(--accent);
-    }
-
-    .menu-toggle {
-      display: none;
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 24px;
       cursor: pointer;
-      color: var(--text-primary);
+      color: #999;
+      padding: 0;
+      width: 30px;
+      height: 30px;
     }
 
-    .mobile-menu {
+    .modal-close:hover {
+      color: #333;
+      background: none;
+      transform: none;
+    }
+
+    .loading {
       display: none;
-      flex-direction: column;
-      padding: 1rem;
-      background-color: var(--bg-secondary);
-    }
-
-    .mobile-menu .nav-link {
-      padding: 0.5rem 0;
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 5rem 0;
-    }
-
-    .hero-content {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    .hero-text {
-      flex: 1;
-    }
-
-    .subtitle {
-      margin-bottom: 0.5rem;
-      color: var(--text-secondary);
-    }
-
-    .title {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--text-primary);
-    }
-
-    .name {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--accent);
-    }
-
-    .description {
-      margin-bottom: 1.5rem;
-      max-width: 600px;
-      color: var(--text-secondary);
-    }
-
-    .hero-links {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      border-radius: 2rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    .btn-primary {
-      background-color: var(--accent);
-      color: #000000;
-    }
-
-    .btn-primary:hover {
-      background-color: #e0b820;
-    }
-
-    .btn-full {
-      width: 100%;
-      text-align: center;
-    }
-
-    .social-link {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      color: var(--text-secondary);
-      transition: color 0.3s;
-    }
-
-    .social-link:hover {
-      color: var(--accent);
-    }
-
-    /* Contenedor fijo 400x400 */
-    .hero-image {
-      width: 400px;
-      height: 400px;
-      overflow: hidden;
-      border-radius: 8px;
-      margin: 0 auto;
-    }
-
-    .hero-image img {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      object-position: center;
+      background: rgba(255,255,255,0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #ff6600;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+
+    /* Estilos específicos para asegurar que las imágenes se muestren correctamente */
+    .plantilla img, .cara img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      border-radius: 13px;
       display: block;
     }
 
-    /* Portfolio Section */
-    .portfolio {
-      padding: 5rem 0;
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 0.5rem;
-      color: var(--text-primary);
-    }
-
-    .section-subtitle {
-      text-align: center;
-      margin-bottom: 3rem;
-      color: var(--text-secondary);
-    }
-
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-
-    .portfolio-item {
-      border-radius: 0.5rem;
-      overflow: hidden;
-      background-color: var(--card-bg);
-      box-shadow: 0 4px 10px var(--shadow);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .portfolio-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px var(--shadow);
-    }
-
-    .portfolio-item a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .portfolio-image {
-      height: 250px;
-      overflow: hidden;
-    }
-
-    .portfolio-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      transition: transform 0.3s;
-    }
-
-    .portfolio-item:hover .portfolio-image img {
-      transform: scale(1.05);
-    }
-
-    .portfolio-content {
-      padding: 1.5rem;
-    }
-
-    .portfolio-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--text-primary);
-      cursor: pointer; /* Indica que es clickeable */
-    }
-
-    .portfolio-description {
-      color: var(--text-secondary);
-      display: none; /* Initially hidden */
-    }
-
-    .portfolio-description.active {
-      display: block;
-    }
-
-    /* Estilos para las etiquetas de plataforma */
-    .portfolio-tags {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 1rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      background-color: var(--accent);
-      color: var(--bg-primary);
-    }
-
-    /* Skills Section */
-    .skills {
-      padding: 5rem 0;
-    }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    .skill-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: var(--card-bg);
-      padding: 1rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 4px 10px var(--shadow);
-      transition: transform 0.3s;
+    /* Reset completo para el contenedor del cropper */
+    .cropper-container {
       position: relative;
+      font-size: 0;
+      line-height: 0;
+      user-select: none;
+      touch-action: none;
+      background: transparent !important;
     }
 
-    .skill-item:hover {
-      transform: translateY(-5px);
+    .cropper-wrap-box {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
     }
 
-    .skill-icon {
-      font-size: 2.5rem;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
+    .cropper-canvas {
+      background: transparent !important;
     }
 
-    .skill-name {
-      font-weight: 500;
-      color: var(--text-primary);
+    /* Asegurar que el placeholder se oculte correctamente */
+    .plantilla.has-image .placeholder,
+    .cara.has-image .placeholder {
+      display: none !important;
     }
 
-    /* Fallback para Photoshop si el ícono no carga */
-    .skill-item:has(.fa-paint-brush)::before {
-      content: 'PS';
-      font-size: 1.5rem;
-      color: var(--accent);
-      display: none;
+    /* Estados de carga mejorados */
+    .plantilla:not(.has-image),
+    .cara:not(.has-image) {
+      background: #f8f9fa;
     }
 
-    .skill-item .fa-paint-brush:not(:defined)::before {
-      display: block;
+    .plantilla.has-image,
+    .cara.has-image,
+    .plantilla-doble.has-images {
+      background: transparent;
+      border-color: #ff6600;
     }
 
-    /* About Section */
-    .about {
-      padding: 5rem 0;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    .about-content {
-      max-width: 800px;
-      margin: 0 auto;
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
-    .about-text {
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-      color: var(--text-secondary);
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
-    /* Contact Section */
-    .contact {
-      padding: 5rem 0;
-    }
-
-    .contact-form-container {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .contact-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .form-group label {
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-
-    .form-group input,
-    .form-group textarea {
-      padding: 0.75rem;
-      border-radius: 0.25rem;
-      border: 1px solid var(--border);
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 1rem;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    /* Footer */
-    .footer {
-      padding: 3rem 0 1.5rem;
-      background-color: var(--bg-primary);
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-
-    .footer-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-subtitle {
-      opacity: 0.8;
-    }
-
-    .footer-social {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .footer-social-link {
-      font-size: 1.5rem;
-      color: var(--text-primary);
-      transition: color 0.3s;
-    }
-
-    .footer-social-link:hover {
-      color: var(--accent);
-    }
-
-    .footer-bottom {
-      text-align: center;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      opacity: 0.7;
-      font-size: 0.9rem;
-    }
-
-    /* Media Queries */
     @media (max-width: 768px) {
-      .nav-menu {
-        display: none;
-      }
-
-      .menu-toggle {
-        display: block;
-      }
-
-      .mobile-menu.active {
-        display: flex;
-      }
-
-      .hero-content {
-        flex-direction: column-reverse;
-        text-align: center;
-      }
-
-      .hero-links {
-        justify-content: center;
-      }
-
-      .container {
-        padding: 0 15px;
-      }
-
-      .navbar {
-        padding: 0.5rem 0;
-      }
-
-      .logo {
-        font-size: 1.2rem;
-      }
-
-      .menu-toggle {
-        font-size: 1.2rem;
-      }
-
-      .mobile-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background-color: var(--bg-secondary);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-
-      .mobile-menu .nav-link {
-        padding: 1rem;
-        text-align: center;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .mobile-menu .nav-link:last-child {
-        border-bottom: none;
-      }
-
-      .footer-content {
-        flex-direction: column;
-        gap: 1.5rem;
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .title {
-        font-size: 2.5rem;
-      }
-
-      .name {
-        font-size: 2rem;
-      }
-
-      .section-title {
-        font-size: 2rem;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .hero {
-        padding: 3rem 0;
-      }
-
-      .hero-content {
-        flex-direction: column-reverse;
-        text-align: center;
-      }
-
-      .hero-image {
-        margin-bottom: 2rem;
-      }
-
-      .hero-image img {
-        max-width: 80%;
-      }
-
-      .title {
-        font-size: 2.5rem;
-      }
-
-      .name {
-        font-size: 2rem;
-      }
-
-      .description {
-        font-size: 1rem;
-      }
-
-      .hero-links {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .btn,
-      .social-link {
-        width: 100%;
-        margin-bottom: 1rem;
-        justify-content: center;
-      }
-
-      .portfolio-grid {
+      .contenedor {
         grid-template-columns: 1fr;
+        gap: 20px;
       }
-
-      .section-title {
-        font-size: 2rem;
+      
+      .plantilla {
+        width: 120px;
+        height: 240px;
       }
-
-      .about-text {
-        font-size: 1rem;
+      
+      .plantilla-doble {
+        width: 240px;
+        height: 240px;
       }
-
-      .contact-form-container {
-        padding: 0 1rem;
+      
+      h1 {
+        font-size: 24px;
       }
+    }
 
-      .footer-content {
-        flex-direction: column;
-        text-align: center;
+    @media (max-width: 480px) {
+      .seccion {
+        padding: 15px;
       }
-
-      .footer-social {
-        margin-top: 1rem;
-        justify-content: center;
+      
+      .plantilla {
+        width: 100px;
+        height: 200px;
+      }
+      
+      .plantilla-doble {
+        width: 200px;
+        height: 200px;
       }
     }
   </style>
 </head>
-<body class="dark-theme">
-  <!-- Matrix Canvas Background -->
-  <canvas id="matrixCanvas"></canvas>
+<body>
+  <h1>🔖 Generador de Separadores Personalizados</h1>
 
-  <!-- Navbar -->
-  <header class="navbar">
-    <div class="container">
-      <div class="navbar-content">
-        <a href="#" class="logo">Jhorman Castellanos</a>
-        
-        <!-- Desktop Navigation -->
-        <nav class="nav-menu">
-          <a href="#" class="nav-link">Inicio</a>
-          <a href="#portfolio" class="nav-link">Proyectos</a>
-          <a href="#about" class="nav-link">Sobre Mí</a>
-          <a href="#skills" class="nav-link">Habilidades</a>
-          <a href="#contact" class="nav-link">Contacto</a>
-          <a href="#" class="nav-link" id="language-toggle">ES/EN</a>
-        </nav>
-        
-        <!-- Mobile Menu Button -->
-        <button class="menu-toggle" id="menu-toggle">
-          <i class="fas fa-bars"></i>
-        </button>
+  <!-- Loading Spinner -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="contenedor">
+    <!-- Una cara -->
+    <div class="seccion">
+      <h3>📄 Separador Una Cara</h3>
+      <div class="plantilla" id="plantilla-una">
+        <div class="placeholder">Sube una imagen</div>
+        <img id="preview-una" src="" alt="Vista previa separador una cara" style="display: none;">
       </div>
+      
+      <div class="error-message" id="error-una"></div>
+      <div class="success-message" id="success-una"></div>
+      
+      <div class="file-input-wrapper">
+        <input type="file" id="upload-una" accept="image/*" aria-label="Subir imagen para separador de una cara">
+        <label for="upload-una" class="file-input-label">📁 Seleccionar Imagen</label>
+      </div>
+      
+      <br>
+      <button id="confirm-una" class="btn-confirm" style="display:none;">✅ Confirmar Recorte</button>
+      <br>
+      <button id="download-una" class="btn-download" disabled>⬇️ Descargar Separador</button>
     </div>
-    
-    <!-- Mobile Navigation -->
-    <div class="mobile-menu" id="mobile-menu">
-      <a href="#" class="nav-link">Inicio</a>
-      <a href="#portfolio" class="nav-link">Proyectos</a>
-      <a href="#about" class="nav-link">Sobre Mí</a>
-      <a href="#skills" class="nav-link">Habilidades</a>
-      <a href="#contact" class="nav-link">Contacto</a>
-      <a href="#" class="nav-link" id="mobile-language-toggle">ES/EN</a>
-    </div>
-  </header>
 
-  <main>
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="container">
-        <div class="hero-content">
-          <div class="hero-text">
-            <p class="subtitle lang-es">Desarrollador, Fotógrafo, Técnico en Sistemas</p>
-            <p class="subtitle lang-en" style="display:none;">Developer, Photographer, Systems Technician</p>
-            
-            <h1 class="title lang-es">Freelance</h1>
-            <h1 class="title lang-en" style="display:none;">Freelance</h1>
-
-            <h2 class="name lang-es">Jhorman Jesus Castellanos Morales</h2>
-            <h2 class="name lang-en" style="display:none;">Jhorman Jesus Castellanos Morales</h2>
-
-            <p class="description lang-es">Desarrollador Web junior, estoy en constante aprendizaje para fortalecer conocimientos y experiencias.</p>
-            <p class="description lang-en" style="display:none;">Junior web developer, I am constantly learning to strengthen my knowledge and experience.</p>
-
-            <div class="hero-links">
-              <a href="#portfolio" class="btn btn-primary lang-es">Mis Proyectos</a>
-              <a href="#portfolio" class="btn btn-primary lang-en" style="display:none;">My Projects</a>
-
-              <a href="https://github.com/Jhormancastella" target="_blank" class="social-link">
-                <i class="fab fa-github"></i>
-                <span class="lang-es">GitHub</span>
-                <span class="lang-en" style="display:none;">GitHub</span>
-              </a>
-
-              <a href="https://www.linkedin.com/in/jhorman-jesus-castellanos-morales-245b97261" target="_blank" class="social-link">
-                <i class="fab fa-linkedin"></i>
-                <span class="lang-es">LinkedIn</span>
-                <span class="lang-en" style="display:none;">LinkedIn</span>
-              </a>
-            </div>
-          </div>
-          <!-- Carrusel de imágenes -->
-          <div class="hero-image">
-            <img id="hero-carousel" src="https://res.cloudinary.com/dipv76dpn/image/upload/v1757879345/Rosy/ke5zgcojsf2jwr8pgrva.jpg" alt="Jhorman Jesus Castellanos Morales" loading="lazy">
-          </div>
+    <!-- Doble cara -->
+    <div class="seccion">
+      <h3>📄📄 Separador Doble Cara</h3>
+      <div class="plantilla-doble" id="plantilla-doble">
+        <div class="cara" id="cara1">
+          <div class="placeholder">Cara 1</div>
+          <img id="preview-doble1" src="" alt="Vista previa cara 1" style="display: none;">
         </div>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-      <div class="container">
-        <h2 class="section-title lang-es">Sobre Mí</h2>
-        <h2 class="section-title lang-en" style="display:none;">About Me</h2>
-        
-        <div class="about-content">
-          <p class="about-text lang-es">Soy Jhorman Jesus Castellanos Morales, un desarrollador web junior apasionado por la tecnología y la fotografía.</p>
-          <p class="about-text lang-en" style="display:none;">I am Jhorman Jesus Castellanos Morales, a junior web developer passionate about technology and photography.</p>
-
-          <p class="about-text lang-es">Como técnico en sistemas, tengo una sólida base en el funcionamiento de hardware y software.</p>
-          <p class="about-text lang-en" style="display:none;">As a systems technician, I have a solid foundation in hardware and software functionality.</p>
-
-          <p class="about-text lang-es">Mi objetivo es seguir creciendo profesionalmente, aprendiendo nuevas tecnologías y metodologías que me permitan crear soluciones innovadoras y eficientes.</p>
-          <p class="about-text lang-en" style="display:none;">My goal is to continue growing professionally, learning new technologies and methodologies that allow me to create innovative and efficient solutions.</p>
-
-          <p class="about-text lang-es">Estoy abierto a colaboraciones y nuevos proyectos que me permitan expandir mis habilidades y aportar valor con mi experiencia técnica y creativa.</p>
-          <p class="about-text lang-en" style="display:none;">I am open to collaborations and new projects that allow me to expand my skills and bring value with my technical and creative experience.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-      <div class="container">
-        <h2 class="section-title lang-es">Mis Habilidades</h2>
-        <h2 class="section-title lang-en" style="display:none;">My Skills</h2>
-        
-        <p class="section-subtitle lang-es">Tecnologías y herramientas que domino</p>
-        <p class="section-subtitle lang-en" style="display:none;">Technologies and tools I master</p>
-        
-        <div class="skills-grid">
-          <div class="skill-item">
-            <i class="fab fa-html5 skill-icon"></i>
-            <span class="skill-name">HTML</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-js skill-icon"></i>
-            <span class="skill-name">JS</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-css3-alt skill-icon"></i>
-            <span class="skill-name">CSS</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-python skill-icon"></i>
-            <span class="skill-name">Python</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-php skill-icon"></i>
-            <span class="skill-name">PHP</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-java skill-icon"></i>
-            <span class="skill-name">Java</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-leaf skill-icon"></i>
-            <span class="skill-name">Spring Boot</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-database skill-icon"></i>
-            <span class="skill-name">MySQL</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-database skill-icon"></i>
-            <span class="skill-name">PostgreSQL</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-paint-brush skill-icon"></i>
-            <span class="skill-name">Photoshop</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-cube skill-icon"></i>
-            <span class="skill-name">Blender</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-aws skill-icon"></i>
-            <span class="skill-name">AWS</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio">
-      <div class="container">
-        <h2 class="section-title lang-es">Mis Proyectos</h2>
-        <h2 class="section-title lang-en" style="display:none;">My Projects</h2>
-        
-        <p class="section-subtitle lang-es">Trabajos y proyectos realizados</p>
-        <p class="section-subtitle lang-en" style="display:none;">Completed works and projects</p>
-        
-        <div class="portfolio-grid">
-          <!-- Proyecto 1 -->
-          <div class="portfolio-item">
-            <div class="portfolio-image">
-              <img src="https://www.godaddy.com/resources/latam/wp-content/uploads/sites/4/2024/11/portada_java-se_11zon-1.png?size=3840x0" alt="Configuración de Juegos por Plataforma" loading="lazy">
-            </div>
-            <div class="portfolio-content">
-              <h3 class="portfolio-title lang-es">Configuración de Juegos por Plataforma</h3>
-              <h3 class="portfolio-title lang-en" style="display:none;">Game Configuration by Platform</h3>
-              
-              <p class="portfolio-description lang-es">Aplicación que permite configurar y gestionar juegos según diferentes plataformas, facilitando la organización de bibliotecas de videojuegos.</p>
-              <p class="portfolio-description lang-en" style="display:none;">Application that allows you to configure and manage games across different platforms, making it easier to organize video game libraries.</p>
-              
-              <div class="portfolio-buttons">
-                <button class="btn-clone" onclick="cloneProject('https://github.com/Jhormancastella/DesafIo-5-Configuracion-de-Juegos-por-Plataforma')">
-                  <span class="lang-es">Clonar</span>
-                  <span class="lang-en" style="display:none;">Clone</span>
-                </button>
-                <button class="btn-visit" onclick="visitProject('https://github.com/Jhormancastella/DesafIo-5-Configuracion-de-Juegos-por-Plataforma')">
-                  <span class="lang-es">Visitar</span>
-                  <span class="lang-en" style="display:none;">Visit</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Proyecto 2 -->
-          <div class="portfolio-item">
-            <div class="portfolio-image">
-              <img src="https://phoenixnap.com/glossary/wp-content/uploads/2024/06/what-is-java.jpg" alt="Lista de Tareas" loading="lazy">
-            </div>
-            <div class="portfolio-content">
-              <h3 class="portfolio-title lang-es">Lista de Tareas</h3>
-              <h3 class="portfolio-title lang-en" style="display:none;">To-Do List</h3>
-              
-              <p class="portfolio-description lang-es">Aplicación web para gestionar tareas diarias, permitiendo crear, editar, marcar como completadas y eliminar tareas de manera intuitiva.</p>
-              <p class="portfolio-description lang-en" style="display:none;">Web application to manage daily tasks, allowing users to create, edit, mark as complete, and delete tasks intuitively.</p>
-              
-              <div class="portfolio-buttons">
-                <button class="btn-clone" onclick="cloneProject('https://github.com/Jhormancastella/ListaDeTareas')">
-                  <span class="lang-es">Clonar</span>
-                  <span class="lang-en" style="display:none;">Clone</span>
-                </button>
-                <button class="btn-visit" onclick="visitProject('https://github.com/Jhormancastella/ListaDeTareas')">
-                  <span class="lang-es">Visitar</span>
-                  <span class="lang-en" style="display:none;">Visit</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Proyecto 3 -->
-          <div class="portfolio-item">
-            <div class="portfolio-image">
-              <img src="https://res.cloudinary.com/dipv76dpn/image/upload/v1757801787/fjtfrshjkyxdtuscpkk5.png" alt="Fotografía Profesional" loading="lazy">
-            </div>
-            <div class="portfolio-content">
-              <h3 class="portfolio-title lang-es">Fotografía Profesional</h3>
-              <h3 class="portfolio-title lang-en" style="display:none;">Professional Photography</h3>
-
-              <p class="portfolio-description lang-es">Servicios de fotografía profesional para eventos, retratos y productos. Capturando momentos especiales con un enfoque artístico y técnico.</p>
-              <p class="portfolio-description lang-en" style="display:none;">Professional photography services for events, portraits, and products. Capturing special moments with an artistic and technical approach.</p>
-              
-              <div class="portfolio-buttons">
-                <button class="btn-visit" onclick="visitProject('https://jhormancastella.github.io/FotoStudioRosy/')">
-                  <span class="lang-es">Visitar</span>
-                  <span class="lang-en" style="display:none;">Visit</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Proyecto 4 -->
-          <div class="portfolio-item">
-            <div class="portfolio-image">
-              <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/portada%20de%20fantasma%20come%20videojuego.jpg-0Zpq46spXp9ZBJxdlur2WnwyIm84I7.jpeg" alt="Fantasma Come Hamburguesas - Videojuego" loading="lazy">
-            </div>
-            <div class="portfolio-content">
-              <h3 class="portfolio-title lang-es">Fantasma Come Hamburguesas</h3>
-              <h3 class="portfolio-title lang-en" style="display:none;">Hamburger Ghost</h3>
-
-              <p class="portfolio-description lang-es">Videojuego original desarrollado con un estilo retro. Una aventura divertida donde controlas un fantasma hambriento en busca de hamburguesas por la ciudad.</p>
-              <p class="portfolio-description lang-en" style="display:none;">Original video game developed in a retro style. A fun adventure where you control a hungry ghost looking for hamburgers around the city.</p>
-              <div class="portfolio-tags">
-                <span class="tag lang-es">PC</span>
-                <span class="tag lang-es">Próximamente en Móviles</span>
-                <span class="tag lang-en" style="display:none;">PC</span>
-                <span class="tag lang-en" style="display:none;">Coming Soon on Mobile</span>
-              </div>
-              
-              <div class="portfolio-buttons">
-                <button class="btn-download" onclick="downloadProject('fantasma-come-hamburguesas-pc')">
-                  <span class="lang-es">Descargar para PC</span>
-                  <span class="lang-en" style="display:none;">Download for PC</span>
-                </button>
-                <button class="btn-visit" onclick="visitProject('https://github.com/Jhormancastella/Fantasma_Come_Hamburguesas')">
-                  <span class="lang-es">Código Fuente</span>
-                  <span class="lang-en" style="display:none;">Source Code</span>
-                </button>
-                <button class="btn-visit" onclick="visitProject('https://jhormancastella.github.io/Fantasma_Come_Hamburguesas/')">
-                  <span class="lang-es">Jugar en Web</span>
-                  <span class="lang-en" style="display:none;">Play on Web</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-      <div class="container">
-        <h2 class="section-title lang-es">Contacto</h2>
-        <h2 class="section-title lang-en" style="display:none;">Contact</h2>
-        
-        <div class="contact-form-container">
-          <form class="contact-form" action="https://formsubmit.co/jesusjhorman@gmail.com" method="POST">
-            <div class="form-group">
-              <label for="name" class="lang-es">Nombre</label>
-              <label for="name" class="lang-en" style="display:none;">Name</label>
-              <input type="text" id="name" name="name" placeholder="Tu nombre" required>
-            </div>
-            <div class="form-group">
-              <label for="email" class="lang-es">Email</label>
-              <label for="email" class="lang-en" style="display:none;">Email</label>
-              <input type="email" id="email" name="email" placeholder="tu@email.com" required>
-            </div>
-            <div class="form-group">
-              <label for="message" class="lang-es">Mensaje</label>
-              <label for="message" class="lang-en" style="display:none;">Message</label>
-              <textarea id="message" name="message" rows="4" placeholder="Tu mensaje..." required></textarea>
-            </div>
-            <input type="hidden" name="_subject" value="Nuevo mensaje de tu portafolio web">
-            <input type="hidden" name="_next" value="https://tudominio.com/gracias.html">
-            <input type="hidden" name="_captcha" value="false">
-            <button type="submit" class="btn btn-primary btn-full lang-es">Enviar Mensaje</button>
-            <button type="submit" class="btn btn-primary btn-full lang-en" style="display:none;">Send Message</button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-info">
-          <h3 class="footer-title">Jhorman Jesus Castellanos Morales</h3>
-          <p class="footer-subtitle lang-es">Desarrollador Web | Fotógrafo | Técnico en Sistemas</p>
-          <p class="footer-subtitle lang-en" style="display:none;">Web Developer | Photographer | Systems Technician</p>
-        </div>
-        
-        <div class="footer-social">
-          <a href="https://github.com/Jhormancastella" target="_blank" class="footer-social-link">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="https://www.linkedin.com/in/jhorman-jesus-castellanos-morales-245b97261" target="_blank" class="footer-social-link">
-            <i class="fab fa-linkedin"></i>
-          </a>
-          <a href="mailto:contacto@example.com" class="footer-social-link">
-            <i class="fas fa-envelope"></i>
-          </a>
+        <div class="cara" id="cara2">
+          <div class="placeholder">Cara 2</div>
+          <img id="preview-doble2" src="" alt="Vista previa cara 2" style="display: none;">
         </div>
       </div>
       
-      <div class="footer-bottom">
-        <p>&copy; <span id="current-year"></span> Jhorman Jesus Castellanos Morales. Todos los derechos reservados.</p>
+      <div class="error-message" id="error-doble"></div>
+      <div class="success-message" id="success-doble"></div>
+      
+      <div class="file-input-wrapper">
+        <input type="file" id="upload-doble1" accept="image/*" aria-label="Subir imagen para cara 1">
+        <label for="upload-doble1" class="file-input-label">📁 Imagen Cara 1</label>
       </div>
+      <button id="confirm-doble1" class="btn-confirm" style="display:none;">✅ Confirmar Cara 1</button>
+      
+      <br>
+      
+      <div class="file-input-wrapper">
+        <input type="file" id="upload-doble2" accept="image/*" aria-label="Subir imagen para cara 2">
+        <label for="upload-doble2" class="file-input-label">📁 Imagen Cara 2</label>
+      </div>
+      <button id="confirm-doble2" class="btn-confirm" style="display:none;">✅ Confirmar Cara 2</button>
+      
+      <br>
+      <button id="download-doble" class="btn-download" disabled>⬇️ Descargar Separador</button>
     </div>
-  </footer>
+  </div>
 
-  <!-- <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
-    <i class="fas fa-sun"></i>
-    <i class="fas fa-moon"></i>
-  </button> -->
+  <!-- Modal para elegir formato -->
+  <div id="modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close" aria-label="Cerrar modal">&times;</button>
+      <h3 id="modal-title">📥 Elige formato de descarga</h3>
+      <p>Selecciona el formato que prefieras:</p>
+      <button id="modal-jpg">🖼️ JPG (Imagen)</button>
+      <button id="modal-pdf">📄 PDF (Para Impresión)</button>
+    </div>
+  </div>
 
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
   <script>
-    // Variable para rastrear el idioma actual (inicia en español)
-    let currentLang = 'es';
+    // Configuración global
+    const CONFIG = {
+      MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+      ALLOWED_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+      SEPARATOR_WIDTH_SINGLE: 150,
+      SEPARATOR_HEIGHT: 450,
+      SEPARATOR_WIDTH_DOUBLE: 300,
+      ASPECT_RATIO: 150 / 450
+    };
 
-    // Función corregida para cambio de idiomas
-    function toggleLanguage(event) {
-      event.preventDefault();
-      const esElements = document.querySelectorAll('.lang-es');
-      const enElements = document.querySelectorAll('.lang-en');
-      const toggles = document.querySelectorAll('#language-toggle, #mobile-language-toggle');
+    // Estado global
+    let state = {
+      croppedImageUna: null,
+      croppedImageDoble1: null,
+      croppedImageDoble2: null,
+      currentCropper: null,
+      librariesLoaded: false
+    };
 
-      if (currentLang === 'es') {
-        // Cambiar a inglés: ocultar ES, mostrar EN
-        esElements.forEach(el => el.style.display = 'none');
-        enElements.forEach(el => el.style.display = '');
-        toggles.forEach(toggle => toggle.textContent = 'EN/ES');
-        currentLang = 'en';
+    // Verificar si las librerías están cargadas
+    function checkLibraries() {
+      const requiredLibs = ['Cropper', 'html2canvas'];
+      const missingLibs = requiredLibs.filter(lib => typeof window[lib] === 'undefined');
+      
+      if (missingLibs.length > 0) {
+        showError('global', `Error: No se pudieron cargar las librerías necesarias: ${missingLibs.join(', ')}`);
+        return false;
+      }
+      
+      state.librariesLoaded = true;
+      return true;
+    }
+
+    // Funciones de utilidad
+    function showLoading() {
+      document.getElementById('loading').style.display = 'flex';
+    }
+
+    function hideLoading() {
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    function showError(section, message) {
+      const errorElement = document.getElementById(`error-${section}`);
+      if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+        setTimeout(() => {
+          errorElement.style.display = 'none';
+        }, 5000);
       } else {
-        // Cambiar a español: ocultar EN, mostrar ES
-        enElements.forEach(el => el.style.display = 'none');
-        esElements.forEach(el => el.style.display = '');
-        toggles.forEach(toggle => toggle.textContent = 'ES/EN');
-        currentLang = 'es';
+        alert(message);
       }
     }
 
-    // Asignar el evento a los botones
-    document.getElementById('language-toggle').addEventListener('click', toggleLanguage);
-    document.getElementById('mobile-language-toggle').addEventListener('click', toggleLanguage);
-
-    // Funciones para los botones de proyectos
-    function downloadProject(projectId) {
-      alert(`Iniciando descarga del proyecto: ${projectId}`);
+    function showSuccess(section, message) {
+      const successElement = document.getElementById(`success-${section}`);
+      if (successElement) {
+        successElement.textContent = message;
+        successElement.style.display = 'block';
+        setTimeout(() => {
+          successElement.style.display = 'none';
+        }, 3000);
+      }
     }
 
-    function cloneProject(repoUrl) {
-      window.open(repoUrl, '_blank');
+    function validateFile(file) {
+      if (!file) {
+        return { valid: false, error: 'No se seleccionó ningún archivo.' };
+      }
+
+      if (file.size > CONFIG.MAX_FILE_SIZE) {
+        return { valid: false, error: `El archivo es demasiado grande. Máximo ${CONFIG.MAX_FILE_SIZE / (1024 * 1024)}MB.` };
+      }
+
+      if (!CONFIG.ALLOWED_TYPES.includes(file.type)) {
+        return { valid: false, error: 'Formato no válido. Solo se permiten imágenes JPG, PNG y WebP.' };
+      }
+
+      return { valid: true };
     }
 
-    function visitProject(url) {
-      if (url === '#') {
-        alert('Este proyecto no tiene enlace disponible aún');
+    function destroyCropper() {
+      if (state.currentCropper) {
+        // Limpiar completamente el contenedor del cropper
+        const container = state.currentCropper.getContainer();
+        if (container && container.parentNode) {
+          container.parentNode.removeChild(container);
+        }
+        
+        // Destruir la instancia
+        state.currentCropper.destroy();
+        state.currentCropper = null;
+      }
+    }
+
+    function resetImageSection(previewElement, confirmButton, downloadButton, section) {
+      // Ocultar imagen
+      previewElement.style.display = 'none';
+      previewElement.src = '';
+      
+      // Mostrar placeholder
+      const placeholder = previewElement.parentElement.querySelector('.placeholder');
+      if (placeholder) {
+        placeholder.style.display = 'block';
+      }
+      
+      // Resetear botones
+      confirmButton.style.display = 'none';
+      if (downloadButton) downloadButton.disabled = true;
+      
+      // Resetear clases
+      previewElement.parentElement.classList.remove('has-image');
+      
+      // Resetear estado
+      if (section === 'una') {
+        state.croppedImageUna = null;
+      } else if (section === 'doble1') {
+        state.croppedImageDoble1 = null;
+      } else if (section === 'doble2') {
+        state.croppedImageDoble2 = null;
+      }
+      
+      // Limpiar cropper
+      destroyCropper();
+    }
+
+    function initializeCropper(imgElement, confirmButton, onReady) {
+      if (!state.librariesLoaded) {
+        showError('global', 'Las librerías no están cargadas correctamente.');
+        return null;
+      }
+
+      destroyCropper();
+
+      try {
+        // Asegurar que la imagen esté visible y con estilos reseteados
+        imgElement.style.display = 'block';
+        imgElement.style.width = '100%';
+        imgElement.style.height = '100%';
+        imgElement.style.objectFit = 'cover';
+        imgElement.style.transform = 'none';
+        
+        state.currentCropper = new Cropper(imgElement, {
+          aspectRatio: CONFIG.ASPECT_RATIO,
+          viewMode: 1,
+          autoCropArea: 1,
+          zoomable: true,
+          movable: true,
+          rotatable: true,
+          scalable: true,
+          cropBoxResizable: true,
+          ready: () => {
+            confirmButton.style.display = 'inline-block';
+            if (onReady) onReady();
+          },
+          error: (error) => {
+            console.error('Error en Cropper:', error);
+            showError('global', 'Error al inicializar el editor de imágenes.');
+          }
+        });
+        
+        return state.currentCropper;
+      } catch (error) {
+        console.error('Error creando Cropper:', error);
+        showError('global', 'Error al crear el editor de imágenes.');
+        return null;
+      }
+    }
+
+    function handleImageUpload(input, preview, confirm, section, onSuccess) {
+      const file = input.files[0];
+      const validation = validateFile(file);
+
+      if (!validation.valid) {
+        showError(section, validation.error);
+        input.value = '';
         return;
       }
-      window.open(url, '_blank');
-    }
 
-    // Carrusel automático hero
-    const heroImgs = [
-      'https://res.cloudinary.com/dipv76dpn/image/upload/v1757879345/Rosy/ke5zgcojsf2jwr8pgrva.jpg',
-      'https://itechlc.com/wp-content/uploads/2022/11/istockphoto-1367675043-612x612-1.jpg',
-      'https://images.unsplash.com/photo-1613235577937-9ac3eed992fc?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2Fub24lMjBjYW1lcmF8ZW58MHx8MHx8fDA%3D',
-      'https://catnessgames.com/wp-content/uploads/2024/12/tipos-videojuegos-consolas-y-plataformas.jpg',
-      'https://res.cloudinary.com/dipv76dpn/image/upload/v1757879378/Rosy/mea9yccx3mwf78mwqocs.png',
-      'https://www.campustraining.es/wp-content/uploads/2024/08/lenguaje-C.jpg.webp'
-    ];
-    let currentIndex = 0;
-    function cambiarImagenHero() {
-      currentIndex = (currentIndex + 1) % heroImgs.length;
-      document.getElementById('hero-carousel').src = heroImgs[currentIndex];
-    }
-    setInterval(cambiarImagenHero, 4000);
-
-    // Elementos DOM
-    const menuToggle = document.getElementById("menu-toggle");
-    const mobileMenu = document.getElementById("mobile-menu");
-    const currentYearElement = document.getElementById("current-year");
-    const mobileMenuLinks = mobileMenu.querySelectorAll(".nav-link");
-
-    // Establecer el año actual en el footer
-    currentYearElement.textContent = new Date().getFullYear();
-
-    // Función para mostrar/ocultar el menú móvil
-    function toggleMobileMenu() {
-      mobileMenu.classList.toggle("active");
-    }
-
-    // Cerrar el menú móvil al hacer clic en un enlace
-    mobileMenuLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        mobileMenu.classList.remove("active");
-      });
-    });
-
-    // Event listeners
-    menuToggle.addEventListener("click", toggleMobileMenu);
-
-    // Smooth scrolling para los enlaces internos
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute("href")).scrollIntoView({
-          behavior: "smooth",
-        });
-      });
-    });
-
-    // Matrix Background Effect
-    const canvas = document.getElementById("matrixCanvas");
-    const ctx = canvas.getContext("2d");
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
-    }
-
-    function drawMatrix() {
-      ctx.fillStyle = "rgba(18, 18, 18, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#0F0";
-      ctx.font = fontSize + "px monospace";
-
-      for (let i = 0; i < drops.length; i++) {
-        const text = characters.charAt(Math.floor(Math.random() * characters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
+      showLoading();
+      
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          // Resetear completamente la imagen antes de cargar la nueva
+          preview.style.cssText = '';
+          preview.style.display = 'block';
+          preview.style.width = '100%';
+          preview.style.height = '100%';
+          preview.style.objectFit = 'cover';
+          
+          preview.src = event.target.result;
+          preview.parentElement.querySelector('.placeholder').style.display = 'none';
+          
+          preview.onload = () => {
+            hideLoading();
+            const cropper = initializeCropper(preview, confirm, () => {
+              preview.parentElement.classList.add('has-image');
+              if (onSuccess) onSuccess();
+            });
+            
+            if (!cropper) {
+              showError(section, 'Error al cargar el editor de imagen.');
+              return;
+            }
+          };
+          
+          preview.onerror = () => {
+            hideLoading();
+            showError(section, 'Error al cargar la imagen.');
+            // Restaurar placeholder en caso de error
+            preview.style.display = 'none';
+            preview.parentElement.querySelector('.placeholder').style.display = 'block';
+          };
+        } catch (error) {
+          hideLoading();
+          console.error('Error procesando imagen:', error);
+          showError(section, 'Error al procesar la imagen.');
+          preview.style.display = 'none';
+          preview.parentElement.querySelector('.placeholder').style.display = 'block';
         }
-        drops[i]++;
+      };
+
+      reader.onerror = () => {
+        hideLoading();
+        showError(section, 'Error al leer el archivo.');
+        preview.style.display = 'none';
+        preview.parentElement.querySelector('.placeholder').style.display = 'block';
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function handleCropConfirm(cropperInstance, stateKey, preview, confirm, section, callback) {
+      if (!cropperInstance) {
+        showError(section, 'No hay imagen para recortar.');
+        return;
+      }
+
+      showLoading();
+
+      try {
+        const canvas = cropperInstance.getCroppedCanvas({
+          width: CONFIG.SEPARATOR_WIDTH_SINGLE,
+          height: CONFIG.SEPARATOR_HEIGHT,
+          imageSmoothingEnabled: true,
+          imageSmoothingQuality: 'high'
+        });
+
+        state[stateKey] = canvas.toDataURL('image/png', 0.95);
+        
+        // Limpiar completamente antes de mostrar la imagen recortada
+        destroyCropper();
+        
+        // Resetear completamente la vista previa
+        preview.style.cssText = '';
+        preview.style.display = 'block';
+        preview.style.width = '100%';
+        preview.style.height = '100%';
+        preview.style.objectFit = 'cover';
+        preview.style.borderRadius = '13px';
+        
+        preview.src = state[stateKey];
+        
+        confirm.style.display = 'none';
+        
+        // Asegurar que el placeholder esté oculto
+        const placeholder = preview.parentElement.querySelector('.placeholder');
+        if (placeholder) {
+          placeholder.style.display = 'none';
+        }
+        
+        // Forzar reflow para asegurar que los estilos se apliquen
+        preview.parentElement.classList.remove('has-image');
+        void preview.parentElement.offsetWidth; // Trigger reflow
+        preview.parentElement.classList.add('has-image');
+        
+        showSuccess(section, 'Imagen recortada correctamente.');
+        
+        if (callback) callback();
+      } catch (error) {
+        console.error('Error al recortar:', error);
+        showError(section, 'Error al recortar la imagen.');
+      } finally {
+        hideLoading();
       }
     }
 
-    setInterval(drawMatrix, 50);
+    function generateCanvas(isDouble, images) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = isDouble ? CONFIG.SEPARATOR_WIDTH_DOUBLE : CONFIG.SEPARATOR_WIDTH_SINGLE;
+      canvas.height = CONFIG.SEPARATOR_HEIGHT;
+      
+      // Fondo blanco
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Toggle descripciones en proyectos
-    document.querySelectorAll('.portfolio-title').forEach(title => {
-      title.addEventListener('click', () => {
-        let next = title.nextElementSibling;
-        while (next) {
-          if (next.classList.contains('portfolio-description')) {
-            next.classList.toggle('active');
-          }
-          next = next.nextElementSibling;
+      return new Promise((resolve, reject) => {
+        if (isDouble) {
+          let loadedImages = 0;
+          const imgs = [new Image(), new Image()];
+          
+          imgs.forEach((img, index) => {
+            img.onload = () => {
+              ctx.drawImage(img, index * CONFIG.SEPARATOR_WIDTH_SINGLE, 0, CONFIG.SEPARATOR_WIDTH_SINGLE, CONFIG.SEPARATOR_HEIGHT);
+              loadedImages++;
+              if (loadedImages === 2) resolve(canvas);
+            };
+            img.onerror = () => reject(new Error(`Error cargando imagen ${index + 1}`));
+            img.src = images[index];
+          });
+        } else {
+          const img = new Image();
+          img.onload = () => {
+            ctx.drawImage(img, 0, 0, CONFIG.SEPARATOR_WIDTH_SINGLE, CONFIG.SEPARATOR_HEIGHT);
+            resolve(canvas);
+          };
+          img.onerror = () => reject(new Error('Error cargando imagen'));
+          img.src = images[0];
         }
       });
+    }
+
+    function downloadAsJPG(filename, isDouble, images) {
+      showLoading();
+      
+      generateCanvas(isDouble, images)
+        .then(canvas => {
+          const link = document.createElement('a');
+          link.download = `${filename}.jpg`;
+          link.href = canvas.toDataURL('image/jpeg', 0.95);
+          link.click();
+          
+          showSuccess('global', 'Descarga completada exitosamente.');
+        })
+        .catch(error => {
+          console.error('Error generando JPG:', error);
+          showError('global', 'Error al generar la imagen JPG.');
+        })
+        .finally(() => {
+          hideLoading();
+        });
+    }
+
+    function downloadAsPDF(plantillaId, filename, isDouble) {
+      if (typeof window.jspdf === 'undefined') {
+        showError('global', 'Error: Librería PDF no disponible.');
+        return;
+      }
+
+      showLoading();
+
+      const element = document.getElementById(plantillaId);
+      
+      html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+      }).then(canvas => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+
+        const imgData = canvas.toDataURL('image/png', 0.95);
+        const width = isDouble ? 100 : 50;
+        const height = 150;
+        const x = (210 - width) / 2;
+        const y = 50;
+
+        // Agregar imagen
+        doc.addImage(imgData, 'PNG', x, y, width, height);
+
+        // Agregar guías de corte
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.1);
+        doc.rect(x, y, width, height);
+        
+        // Marcas de corte
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.2);
+        const markLength = 5;
+        
+        // Esquinas
+        doc.line(x - markLength, y, x, y);
+        doc.line(x + width, y, x + width + markLength, y);
+        doc.line(x - markLength, y + height, x, y + height);
+        doc.line(x + width, y + height, x + width + markLength, y + height);
+
+        // Información
+        doc.setFontSize(10);
+        doc.text(`Medidas: ${isDouble ? '10cm x 15cm' : '5cm x 15cm'}`, 10, 20);
+        doc.text('Recomendación: Papel fotográfico o cartulina de 180-250gsm', 10, 30);
+        doc.text('Imprime sin escalar al 100%', 10, 40);
+        doc.text('Las líneas grises son guías de corte', 10, 250);
+
+        doc.save(`${filename}.pdf`);
+        showSuccess('global', 'PDF generado exitosamente.');
+      }).catch(error => {
+        console.error('Error generando PDF:', error);
+        showError('global', 'Error al generar el PDF.');
+      }).finally(() => {
+        hideLoading();
+      });
+    }
+
+    function openModal(plantillaId, filename, isDouble, images) {
+      const modal = document.getElementById('modal');
+      const modalJpg = document.getElementById('modal-jpg');
+      const modalPdf = document.getElementById('modal-pdf');
+
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+
+      modalJpg.onclick = () => {
+        closeModal();
+        downloadAsJPG(filename, isDouble, images);
+      };
+
+      modalPdf.onclick = () => {
+        closeModal();
+        downloadAsPDF(plantillaId, filename, isDouble);
+      };
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Verificar librerías al cargar
+      setTimeout(() => {
+        checkLibraries();
+      }, 1000);
+
+      // Modal close handlers
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      
+      window.addEventListener('click', (event) => {
+        const modal = document.getElementById('modal');
+        if (event.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeModal();
+        }
+      });
+
+      // --- SEPARADOR UNA CARA ---
+      const uploadUna = document.getElementById('upload-una');
+      const previewUna = document.getElementById('preview-una');
+      const confirmUna = document.getElementById('confirm-una');
+      const downloadUna = document.getElementById('download-una');
+
+      uploadUna.addEventListener('change', () => {
+        // Resetear antes de cargar nueva imagen
+        resetImageSection(previewUna, confirmUna, downloadUna, 'una');
+        handleImageUpload(uploadUna, previewUna, confirmUna, 'una', () => {
+          downloadUna.disabled = true;
+        });
+      });
+
+      confirmUna.addEventListener('click', () => {
+        handleCropConfirm(state.currentCropper, 'croppedImageUna', previewUna, confirmUna, 'una', () => {
+          downloadUna.disabled = false;
+        });
+      });
+
+      downloadUna.addEventListener('click', () => {
+        if (state.croppedImageUna) {
+          openModal('plantilla-una', 'separador-una-cara', false, [state.croppedImageUna]);
+        } else {
+          showError('una', 'Por favor, confirma el recorte antes de descargar.');
+        }
+      });
+
+      // --- SEPARADOR DOBLE CARA ---
+      const uploadDoble1 = document.getElementById('upload-doble1');
+      const previewDoble1 = document.getElementById('preview-doble1');
+      const confirmDoble1 = document.getElementById('confirm-doble1');
+      const uploadDoble2 = document.getElementById('upload-doble2');
+      const previewDoble2 = document.getElementById('preview-doble2');
+      const confirmDoble2 = document.getElementById('confirm-doble2');
+      const downloadDoble = document.getElementById('download-doble');
+
+      function updateDownloadDobleState() {
+        downloadDoble.disabled = !(state.croppedImageDoble1 && state.croppedImageDoble2);
+        if (!downloadDoble.disabled) {
+          document.getElementById('plantilla-doble').classList.add('has-images');
+        }
+      }
+
+      uploadDoble1.addEventListener('change', () => {
+        resetImageSection(previewDoble1, confirmDoble1, downloadDoble, 'doble1');
+        handleImageUpload(uploadDoble1, previewDoble1, confirmDoble1, 'doble', () => {
+          document.getElementById('cara1').classList.add('has-image');
+          updateDownloadDobleState();
+        });
+      });
+
+      confirmDoble1.addEventListener('click', () => {
+        handleCropConfirm(state.currentCropper, 'croppedImageDoble1', previewDoble1, confirmDoble1, 'doble', updateDownloadDobleState);
+      });
+
+      uploadDoble2.addEventListener('change', () => {
+        resetImageSection(previewDoble2, confirmDoble2, downloadDoble, 'doble2');
+        handleImageUpload(uploadDoble2, previewDoble2, confirmDoble2, 'doble', () => {
+          document.getElementById('cara2').classList.add('has-image');
+          updateDownloadDobleState();
+        });
+      });
+
+      confirmDoble2.addEventListener('click', () => {
+        handleCropConfirm(state.currentCropper, 'croppedImageDoble2', previewDoble2, confirmDoble2, 'doble', updateDownloadDobleState);
+      });
+
+      downloadDoble.addEventListener('click', () => {
+        if (state.croppedImageDoble1 && state.croppedImageDoble2) {
+          openModal('plantilla-doble', 'separador-doble-cara', true, [state.croppedImageDoble1, state.croppedImageDoble2]);
+        } else {
+          showError('doble', 'Por favor, confirma el recorte de ambas caras antes de descargar.');
+        }
+      });
+    });
+
+    // Manejo global de errores
+    window.addEventListener('error', (event) => {
+      console.error('Error global:', event.error);
+      hideLoading();
+      showError('global', 'Ocurrió un error inesperado. Por favor, recarga la página.');
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('Promise rechazada:', event.reason);
+      hideLoading();
+      showError('global', 'Error en el procesamiento. Por favor, inténtalo de nuevo.');
     });
   </script>
 </body>
